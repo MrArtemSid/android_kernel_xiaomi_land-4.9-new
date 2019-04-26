@@ -572,9 +572,13 @@ dtb-$(CONFIG_ARCH_MSM8937) += msm8937-pmi8950-mtp.dtb \
 	msm8937-interposer-sdm429-mtp.dtb
 endif
 
+ifeq ($(CONFIG_MACH_XIAOMI_MSM8940),y)
+dtb-$(CONFIG_MACH_XIAOMI_SANTONI) += msm8940-pmi8950-qrd-sku7-santoni.dtb
+else
 dtb-$(CONFIG_ARCH_MSM8940) += msm8940-pmi8937-mtp.dtb \
 	msm8940-pmi8950-mtp.dtb \
 	msm8940-pmi8940-mtp.dtb
+endif
 
 dtb-$(CONFIG_ARCH_MSM8917) += msm8917-pmi8950-mtp.dtb \
 	msm8917-pmi8950-cdp.dtb \
