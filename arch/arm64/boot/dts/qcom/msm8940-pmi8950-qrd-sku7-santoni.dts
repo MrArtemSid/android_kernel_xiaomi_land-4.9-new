@@ -14,7 +14,7 @@
 /dts-v1/;
 
 #include "msm8940.dtsi"
-#include "msm8937-pmi8950-qrd-sku1.dtsi"
+#include "msm8937-pmi8950-qrd-sku1-santoni.dtsi"
 #include "msm8940-camera-sensor-qrd.dtsi"
 #include "msm8940-pinctrl.dtsi"
 

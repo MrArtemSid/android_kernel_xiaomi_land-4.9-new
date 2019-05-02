@@ -133,7 +133,7 @@
 
 };
 
-#include "msm8937-pinctrl.dtsi"
+#include "msm8937-pinctrl-santoni.dtsi"
 #include "msm8937-cpu.dtsi"
 #include "msm8937-gpu.dtsi"
 #include "msm8937-ion.dtsi"
