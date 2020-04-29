@@ -1960,3 +1960,8 @@
 	clocks = <&clock_gcc clk_gcc_oxili_gfx3d_clk>;
 	status = "okay";
 };
+
+&apps_iommu {
+	qcom,no-aarch64;
+};
+
