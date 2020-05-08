@@ -30,21 +30,26 @@
 	firmware: firmware {
 		android {
 			compatible = "android,firmware";
-			vbmeta {
-				compatible = "android,vbmeta";
-				parts = "vbmeta,boot,system,vendor,dtbo,recovery";
-			};
 
 			fstab {
 				compatible = "android,fstab";
 				vendor {
 					compatible = "android,vendor";
-					dev = "/dev/block/platform/soc/7824900.sdhci/by-name/vendor";
+					dev = "/dev/block/platform/soc/7824900.sdhci/by-name/cust";
 					type = "ext4";
 					mnt_flags = "ro,barrier=1,discard";
-					fsmgr_flags = "wait,avb";
+					fsmgr_flags = "wait";
 					status = "ok";
 				};
+				system {
+					compatible = "android,system";
+					dev = "/dev/block/platform/soc/7824900.sdhci/by-name/system";
+					type = "ext4";
+					mnt_flags = "ro,barrier=1,discard";
+					fsmgr_flags = "wait";
+					status = "ok";
+				};
+
 			};
 		};
 	};
@@ -57,7 +62,7 @@
 		other_ext_mem: other_ext_region@0 {
 			compatible = "removed-dma-pool";
 			no-map;
-			reg = <0x0 0x85b00000 0x0 0xd00000>;
+			reg = <0x0 0x84A00000 0x0 0x1E00000>;
 		};
 
 		modem_mem: modem_region@0 {
@@ -124,6 +129,16 @@
 			compatible = "shared-dma-pool";
 			reusable;
 			size = <0x400000>;
+		};
+
+		ramoops@9ff00000 {
+			compatible = "ramoops";
+			reg = <0x0 0x9ff00000 0x0 0x00300000>;
+			record-size = <0x1000>;
+			console-size = <0x200000>;
+			ftrace-size = <0x1000>;
+			pmsg-size = <0x200000>;
+			ecc-size = <0>;
 		};
 	};
 
@@ -571,7 +586,7 @@
 		reg = <0x78b7000 0x600>;
 		interrupt-names = "qup_irq";
 		interrupts = <0 97 0>;
-		qcom,clk-freq-out = <400000>;
+		qcom,clk-freq-out = <100000>;
 		qcom,clk-freq-in  = <19200000>;
 		clock-names = "iface_clk", "core_clk";
 		clocks = <&clock_gcc clk_gcc_blsp1_ahb_clk>,
@@ -586,7 +601,7 @@
 		dmas = <&dma_blsp1 8 64 0x20000020 0x20>,
 			<&dma_blsp1 9 32 0x20000020 0x20>;
 		dma-names = "tx", "rx";
-		status = "disabled";
+		status = "okay";
 	};
 
 	i2c_4: i2c@78b8000 { /* BLSP1 QUP4 */
@@ -940,6 +955,8 @@
 		HSUSB_3p3-supply = <&pm8937_l13>;
 		qcom,vdd-voltage-level = <0 1200000 1200000>;
 		vbus_otg-supply = <&smbcharger_charger_otg>;
+		qcom,hsusb-otg-phy-init-seq =
+			 <0x53 0x80 0x32 0x81 0x07 0x82 0x13 0x83 0xffffffff>;
 
 		qcom,hsusb-otg-phy-type = <3>; /* SNPS Femto PHY */
 		qcom,hsusb-otg-mode = <3>; /* OTG mode */
@@ -1067,7 +1084,7 @@
 			reg = <0x10 8>;
 		};
 
-		dload_type@1c {
+		dload_type@1c{
 			compatible = "qcom,msm-imem-dload-type";
 			reg = <0x1c 4>;
 		};
@@ -1123,6 +1140,18 @@
 			qcom,allocate-boot-time;
 			label = "modem";
 		};
+	};
+
+	sn_fuse: snfuse@0xa0128 {
+		compatible = "qcom,sn-fuse";
+		reg = <0xa0128 0x4>;
+		reg-names = "sn-base";
+	};
+
+	sec_boot_fuse: secbootfuse@0xa41d0 {
+		compatible = "qcom,sec-boot-fuse";
+		reg = <0xa41d0 0x4>;
+		reg-names = "sec-boot-base";
 	};
 
 	jtag_mm0: jtagmm@61bc000 {
@@ -1927,3 +1956,8 @@
 	clocks = <&clock_gcc clk_gcc_oxili_gfx3d_clk>;
 	status = "okay";
 };
+
+&apps_iommu {
+	qcom,no-aarch64;
+};
+
